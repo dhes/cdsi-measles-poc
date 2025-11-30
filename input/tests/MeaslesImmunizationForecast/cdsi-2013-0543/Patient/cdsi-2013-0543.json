@@ -1,0 +1,18 @@
+{
+  "resourceType": "Patient",
+  "id": "cdsi-2013-0543",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Test: Newborn with no immunization history - forecast first dose.</div>"
+  },
+  "name": [
+    {
+      "given": [
+        "Baby"
+      ],
+      "family": "TestCase"
+    }
+  ],
+  "gender": "unknown",
+  "birthDate": "2025-03-02"
+}

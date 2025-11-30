@@ -1,0 +1,18 @@
+{
+  "resourceType": "Patient",
+  "id": "cdsi-2015-0024",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Test: Adult born before 1957 - considered immune without vaccination.</div>"
+  },
+  "name": [
+    {
+      "given": [
+        "Elder"
+      ],
+      "family": "TestCase"
+    }
+  ],
+  "gender": "male",
+  "birthDate": "1955-06-20"
+}

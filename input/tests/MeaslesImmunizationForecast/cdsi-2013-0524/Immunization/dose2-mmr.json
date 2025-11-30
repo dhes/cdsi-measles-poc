@@ -1,0 +1,20 @@
+{
+  "resourceType": "Immunization",
+  "id": "dose2-mmr",
+  "status": "completed",
+  "primarySource": true,
+  "vaccineCode": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "code": "03",
+        "display": "MMR"
+      }
+    ],
+    "text": "Priorix"
+  },
+  "occurrenceDateTime": "2025-11-30T00:00:00.000Z",
+  "patient": {
+    "reference": "Patient/cdsi-2013-0524"
+  }
+}

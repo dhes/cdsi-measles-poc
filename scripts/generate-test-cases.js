@@ -26,7 +26,7 @@ const { v4: uuidv4 } = require('uuid');
 
 // Configuration
 const MANIFESTS_DIR = path.join(__dirname, '..', 'manifests');
-const OUTPUT_BASE_DIR = path.join(__dirname, '..', 'input', 'tests', 'MMR_Standard');
+const OUTPUT_BASE_DIR = path.join(__dirname, '..', 'input', 'tests', 'MeaslesImmunizationForecast');
 
 // Parse command line arguments
 let referenceDate = new Date();

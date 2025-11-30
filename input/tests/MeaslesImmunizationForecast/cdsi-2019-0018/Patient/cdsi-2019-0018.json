@@ -1,0 +1,18 @@
+{
+  "resourceType": "Patient",
+  "id": "cdsi-2019-0018",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Test: Adult (19+) with one valid dose - conditional skip of Dose 2.</div>"
+  },
+  "name": [
+    {
+      "given": [
+        "Adult"
+      ],
+      "family": "TestCase"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "2001-11-30"
+}

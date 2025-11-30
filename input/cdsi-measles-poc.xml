@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ImplementationGuide xmlns="http://hl7.org/fhir">
-    <id value="cdsi-mmr-poc"/>
-    <url value="http://example.org/fhir/ImplementationGuide/cdsi-mmr-poc"/>
+    <id value="cdsi-measles-poc"/>
+    <url value="http://example.org/fhir/ImplementationGuide/cdsi-measles-poc"/>
     <version value="1.0.0"/>
     <name value="MMRCDSSRules"/>
     <title value="MMR CDSS Rules"/>
@@ -16,7 +16,7 @@
       </telecom>
     </contact>
     <description value="MMR Vaccination CDSS Rules from CDC-recommended immunization schedules"/>
-    <packageId value="cdsi-mmr-poc"/>
+    <packageId value="cdsi-measles-poc"/>
     <license value="CC0-1.0"/>
     <fhirVersion value="4.0.1"/>
     <definition>

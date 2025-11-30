@@ -1,0 +1,20 @@
+{
+  "resourceType": "Immunization",
+  "id": "dose1-mmr",
+  "status": "completed",
+  "primarySource": true,
+  "vaccineCode": {
+    "coding": [
+      {
+        "system": "http://hl7.org/fhir/sid/cvx",
+        "code": "03",
+        "display": "MMR"
+      }
+    ],
+    "text": "M-M-R II"
+  },
+  "occurrenceDateTime": "2022-11-30T00:00:00.000Z",
+  "patient": {
+    "reference": "Patient/cdsi-2013-0524"
+  }
+}

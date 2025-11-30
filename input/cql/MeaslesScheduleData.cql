@@ -1,7 +1,7 @@
 /*
  * Library: MeaslesScheduleData
  * Version: 1.0.0
- * Description: Configuration data for Measles immunization forecasting based on CDC CDSI
+ * Description: Configuration data for Measles immunization forecasting based on CDC CDSi
  *              Supporting Data Version 4.64. Contains CVX codes, observation codes,
  *              age/interval parameters, and other configuration from the Antigen and
  *              Schedule Supporting Data.
@@ -20,10 +20,9 @@ using FHIR version '4.0.1'
 // ============================================================================
 
 codesystem "CVX": 'http://hl7.org/fhir/sid/cvx'
-  display 'CDC Vaccine Administered CVX Codes'
-
 codesystem "SNOMED": 'http://snomed.info/sct'
-  display 'SNOMED CT'
+codesystem "ConditionClinical": 'http://terminology.hl7.org/CodeSystem/condition-clinical'
+codesystem "ConditionVerification": 'http://terminology.hl7.org/CodeSystem/condition-ver-status'
 
 // ============================================================================
 // CVX CODES - Measles-containing vaccines
@@ -62,6 +61,18 @@ code "Severe Immunocompromise": '370391006' from "SNOMED"
 code "Healthcare Personnel": '223366009' from "SNOMED"
   display 'Healthcare professional'
 
+// Condition clinical status codes
+code "Active": 'active' from "ConditionClinical" display 'Active'
+code "Recurrence": 'recurrence' from "ConditionClinical" display 'Recurrence'
+code "Relapse": 'relapse' from "ConditionClinical" display 'Relapse'
+code "Inactive": 'inactive' from "ConditionClinical" display 'Inactive'
+code "Remission": 'remission' from "ConditionClinical" display 'Remission'
+code "Resolved": 'resolved' from "ConditionClinical" display 'Resolved'
+
+// Condition verification status codes
+code "Confirmed": 'confirmed' from "ConditionVerification" display 'Confirmed'
+code "Unconfirmed": 'unconfirmed' from "ConditionVerification" display 'Unconfirmed'
+
 // ============================================================================
 // VALUE SETS - Groupings of codes
 // ============================================================================
@@ -86,57 +97,75 @@ valueset "Blood Product Administration": 'http://example.org/fhir/ValueSet/blood
 // ============================================================================
 
 // Standard 2-dose series - Dose 1
-parameter "Dose1_AbsMinAge_Days" Integer default 348  // 12 months - 4 days
-parameter "Dose1_MinAge_Days" Integer default 365      // 12 months
-parameter "Dose1_EarliestRecAge_Days" Integer default 365  // 12 months
-parameter "Dose1_LatestRecAge_Days" Integer default 512    // 16 months + 4 weeks
+parameter "Dose1_AbsMinAge_Days" default 348 'days'  // 12 months - 4 days
+parameter "Dose1_MinAge_Days" default 365 'days'      // 12 months
+parameter "Dose1_EarliestRecAge_Days" default 365 'days'  // 12 months
+parameter "Dose1_LatestRecAge_Days" default 512 'days'    // 16 months + 4 weeks
 
 // Standard 2-dose series - Dose 2
-parameter "Dose2_AbsMinAge_Days" Integer default 391   // 13 months - 4 days
-parameter "Dose2_MinAge_Days" Integer default 395      // 13 months
-parameter "Dose2_EarliestRecAge_Days" Integer default 1460  // 4 years
-parameter "Dose2_LatestRecAge_Days" Integer default 2583    // 7 years + 4 weeks
+parameter "Dose2_AbsMinAge_Days" default 391 'days'   // 13 months - 4 days
+parameter "Dose2_MinAge_Days" default 395 'days'      // 13 months
+parameter "Dose2_EarliestRecAge_Days" default 1460 'days'  // 4 years
+parameter "Dose2_LatestRecAge_Days" default 2583 'days'    // 7 years + 4 weeks
 
 // Dose 2 intervals from previous dose
-parameter "Dose2_AbsMinInterval_Days" Integer default 24   // 4 weeks - 4 days
-parameter "Dose2_MinInterval_Days" Integer default 28      // 4 weeks
-parameter "Dose2_EarliestRecInterval_Days" Integer default 1095  // 3 years
-parameter "Dose2_LatestRecInterval_Days" Integer default 2163    // 6 years + 4 weeks
+parameter "Dose2_AbsMinInterval_Days" default 24 'days'   // 4 weeks - 4 days
+parameter "Dose2_MinInterval_Days" default 28 'days'      // 4 weeks
+parameter "Dose2_EarliestRecInterval_Days" default 1095 'days'  // 3 years
+parameter "Dose2_LatestRecInterval_Days" default 2163 'days'    // 6 years + 4 weeks
 
 // Dose 2 conditional skip - age 19 years
-parameter "Dose2_ConditionalSkip_Age_Days" Integer default 6935  // 19 years - 4 days
+parameter "Dose2_ConditionalSkip_Age_Days" default 6935  // 19 years - 4 days
 
 // Immunity - born before date
-parameter "Immunity_BirthDate" Date default @1957-01-01
+parameter "Immunity_BirthDate" default @1957-01-01
 
 // Live virus conflict interval
-parameter "LiveVirusConflict_MinInterval_Days" Integer default 24  // with grace period
-parameter "LiveVirusConflict_Interval_Days" Integer default 28
+parameter "LiveVirusConflict_MinInterval_Days" default 24 'days'  // with grace period
+parameter "LiveVirusConflict_Interval_Days" default 28 'days'
 
 // Blood product intervals (examples - full list has 17+ types)
-parameter "BloodTransfusion_Whole_Interval_Months" Integer default 6
-parameter "BloodTransfusion_Packed_Interval_Months" Integer default 6
-parameter "IGIV_Kawasaki_Interval_Months" Integer default 11
+parameter "BloodTransfusion_Whole_Interval_Months" default 6
+parameter "BloodTransfusion_Packed_Interval_Months" default 6
+parameter "IGIV_Kawasaki_Interval_Months" default 11
 
 // ============================================================================
-// HELPER CONCEPTS
+// HELPER CONCEPTS - Internal Status Codes for CDSi Logic
 // ============================================================================
 
-// Dose statuses (from Logic Specification Chapter 3)
-concept "Valid": { display 'Valid' }
-concept "Not Valid": { display 'Not Valid' }
-concept "Extraneous": { display 'Extraneous' }
-concept "Skipped": { display 'Skipped' }
-concept "Satisfied": { display 'Satisfied' }
-concept "Not Satisfied": { display 'Not Satisfied' }
+// Define a custom codesystem for CDSi internal statuses
+codesystem "CDSi-Status": 'http://example.org/fhir/CodeSystem/cdsi-status'
+
+// Dose statuses (from CDSi Logic Specification Chapter 3)
+code "Valid Code": 'valid' from "CDSi-Status" display 'Valid'
+code "Not Valid Code": 'not-valid' from "CDSi-Status" display 'Not Valid'
+code "Extraneous Code": 'extraneous' from "CDSi-Status" display 'Extraneous'
+code "Skipped Code": 'skipped' from "CDSi-Status" display 'Skipped'
+code "Satisfied Code": 'satisfied' from "CDSi-Status" display 'Satisfied'
+code "Not Satisfied Code": 'not-satisfied' from "CDSi-Status" display 'Not Satisfied'
 
 // Series statuses
-concept "Complete": { display 'Complete' }
-concept "Not Complete": { display 'Not Complete' }
-concept "Immune": { display 'Immune' }
-concept "Contraindicated": { display 'Contraindicated' }
+code "Complete Code": 'complete' from "CDSi-Status" display 'Complete'
+code "Not Complete Code": 'not-complete' from "CDSi-Status" display 'Not Complete'
+code "Immune Code": 'immune' from "CDSi-Status" display 'Immune'
+code "Contraindicated Code": 'contraindicated' from "CDSi-Status" display 'Contraindicated'
 
 // Forecast statuses
-concept "Recommended": { display 'Recommended' }
-concept "Not Recommended": { display 'Not Recommended' }
-concept "Conditional": { display 'Conditional' }
+code "Recommended Code": 'recommended' from "CDSi-Status" display 'Recommended'
+code "Not Recommended Code": 'not-recommended' from "CDSi-Status" display 'Not Recommended'
+code "Conditional Code": 'conditional' from "CDSi-Status" display 'Conditional'
+
+// Concepts grouping related codes
+concept "Valid": { "Valid Code" } display 'Valid'
+concept "Not Valid": { "Not Valid Code" } display 'Not Valid'
+concept "Extraneous": { "Extraneous Code" } display 'Extraneous'
+concept "Skipped": { "Skipped Code" } display 'Skipped'
+concept "Satisfied": { "Satisfied Code" } display 'Satisfied'
+concept "Not Satisfied": { "Not Satisfied Code" } display 'Not Satisfied'
+concept "Complete": { "Complete Code" } display 'Complete'
+concept "Not Complete": { "Not Complete Code" } display 'Not Complete'
+concept "Immune": { "Immune Code" } display 'Immune'
+concept "Contraindicated": { "Contraindicated Code" } display 'Contraindicated'
+concept "Recommended": { "Recommended Code" } display 'Recommended'
+concept "Not Recommended": { "Not Recommended Code" } display 'Not Recommended'
+concept "Conditional": { "Conditional Code" } display 'Conditional'

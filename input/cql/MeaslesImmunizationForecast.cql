@@ -39,16 +39,16 @@ context Patient
 // ============================================================================
 
 define "Patient Birth Date":
-  Patient.birthDate
+  Patient.birthDate.value
 
 define "Patient Age In Days":
-  days between "Patient Birth Date" and AsOfDate
+  days between "Patient Birth Date" and date from AsOfDate
 
 define "Patient Age In Months":
-  months between "Patient Birth Date" and AsOfDate
+  months between "Patient Birth Date" and date from AsOfDate
 
 define "Patient Age In Years":
-  years between "Patient Birth Date" and AsOfDate
+  years between "Patient Birth Date" and date from AsOfDate
 
 // ============================================================================
 // IMMUNIZATION HISTORY - Organize by Antigen (CDSI Chapter 4.2)
@@ -61,14 +61,14 @@ define "Patient Age In Years":
  */
 define "All Measles Immunizations":
   [Immunization] I
-  where I.status = 'completed'
+  where I.status.value = 'completed'
     and (
       I.vaccineCode ~ Schedule."MMR"
       or I.vaccineCode ~ Schedule."Measles-Rubella"
       or I.vaccineCode ~ Schedule."Measles"
       or I.vaccineCode ~ Schedule."MMRV"
     )
-  sort by (occurrence as dateTime)
+  sort by (occurrence as dateTime).value
 
 /*
  * Patient's Measles immunization history with calculated attributes
@@ -92,45 +92,27 @@ define "Measles Immunization History":
 define "Is Pregnant":
   exists(
     [Condition: Schedule."Pregnancy"] C
-    where C.clinicalStatus ~ ToConcept(FHIR.CodeableConcept {
-      coding: {
-        FHIR.Coding {
-          system: FHIR.uri { value: 'http://terminology.hl7.org/CodeSystem/condition-clinical' },
-          code: FHIR.code { value: 'active' }
-        }
-      }
-    })
+    where C.clinicalStatus ~ Schedule."Active"
   )
 
 /*
  * From AntigenSupportingData: observationCode 154 - HIV/AIDS severely immunocompromised
  * Simplified version - full version would check CD4 count, viral load, etc.
+ * TODO: Replace with actual valueset or specific SNOMED codes
  */
 define "Has Severe Immunocompromise":
   exists(
-    [Condition] C
-    where C.code in Schedule."Severe Immunocompromise Conditions"
-      and C.clinicalStatus ~ ToConcept(FHIR.CodeableConcept {
-        coding: {
-          FHIR.Coding {
-            system: FHIR.uri { value: 'http://terminology.hl7.org/CodeSystem/condition-clinical' },
-            code: FHIR.code { value: 'active' }
-          }
-        }
-      })
+    [Condition: Schedule."Severe Immunocompromise"] C
+    where C.clinicalStatus ~ Schedule."Active"
   )
 
 /*
  * From AntigenSupportingData: observationCodes 126-141 - Blood product administration
  * Example for whole blood transfusion within 6 months
+ * TODO: Create ValueSet resource or use specific procedure codes
  */
 define "Recent Blood Product Administration":
-  exists(
-    [Procedure] P
-    where P.code in Schedule."Blood Product Administration"
-      and P.status = 'completed'
-      and (P.performed as dateTime) within 6 months before AsOfDate
-  )
+  false  // Placeholder - replace with actual valueset or specific codes
 
 /*
  * Aggregate contraindication check
@@ -198,11 +180,18 @@ define "Has Evidence Of Immunity":
  */
 define "Recent Live Virus Administration":
   [Immunization] I
-  where I.vaccineCode in Schedule."Live Virus Vaccines"
-    and I.status = 'completed'
-    and (I.occurrence as dateTime) < AsOfDate
-    and days between (I.occurrence as dateTime) and AsOfDate >= 1
-    and days between (I.occurrence as dateTime) and AsOfDate < Schedule."LiveVirusConflict_Interval_Days"
+  where (I.vaccineCode ~ Schedule."MMR"
+      or I.vaccineCode ~ Schedule."Measles-Rubella"
+      or I.vaccineCode ~ Schedule."Measles"
+      or I.vaccineCode ~ Schedule."MMRV"
+      or I.vaccineCode ~ Schedule."Varicella CVX"
+      or I.vaccineCode ~ Schedule."Yellow Fever CVX"
+      or I.vaccineCode ~ Schedule."Zoster Live CVX"
+      or I.vaccineCode ~ Schedule."Influenza LAIV CVX")
+    and I.status.value = 'completed'
+    and date from (I.occurrence as dateTime) < date from AsOfDate
+    and days between date from (I.occurrence as dateTime) and date from AsOfDate >= 1
+    and days between date from (I.occurrence as dateTime) and date from AsOfDate < 28
 
 define "Has Live Virus Conflict":
   exists("Recent Live Virus Administration")
@@ -365,34 +354,34 @@ define "Next Dose Number":
 define "Forecast Earliest Date":
   if not "Forecast Needed" then null
   else if "Next Dose Number" = 1 then
-    "Patient Birth Date" + Schedule."Dose1_AbsMinAge_Days" days
+    "Patient Birth Date" + Schedule."Dose1_AbsMinAge_Days"
   else if "Next Dose Number" = 2 then
-    Greatest(
-      "Patient Birth Date" + Schedule."Dose2_AbsMinAge_Days" days,
-      ("Dose 1 Valid".occurrence as dateTime) + Schedule."Dose2_AbsMinInterval_Days" days
-    )
+    Max({
+      "Patient Birth Date" + Schedule."Dose2_AbsMinAge_Days",
+      date from ("Dose 1 Valid".occurrence as dateTime) + Schedule."Dose2_AbsMinInterval_Days"
+    })
   else null
 
 define "Forecast Recommended Date":
   if not "Forecast Needed" then null
   else if "Next Dose Number" = 1 then
-    "Patient Birth Date" + Schedule."Dose1_EarliestRecAge_Days" days
+    "Patient Birth Date" + Schedule."Dose1_EarliestRecAge_Days"
   else if "Next Dose Number" = 2 then
-    Greatest(
-      "Patient Birth Date" + Schedule."Dose2_EarliestRecAge_Days" days,
-      ("Dose 1 Valid".occurrence as dateTime) + Schedule."Dose2_EarliestRecInterval_Days" days
-    )
+    Max({
+      "Patient Birth Date" + Schedule."Dose2_EarliestRecAge_Days",
+      date from ("Dose 1 Valid".occurrence as dateTime) + Schedule."Dose2_EarliestRecInterval_Days"
+    })
   else null
 
 define "Forecast Past Due Date":
   if not "Forecast Needed" then null
   else if "Next Dose Number" = 1 then
-    "Patient Birth Date" + Schedule."Dose1_LatestRecAge_Days" days
+    "Patient Birth Date" + Schedule."Dose1_LatestRecAge_Days"
   else if "Next Dose Number" = 2 then
-    Minimum(
-      "Patient Birth Date" + Schedule."Dose2_LatestRecAge_Days" days,
-      ("Dose 1 Valid".occurrence as dateTime) + Schedule."Dose2_LatestRecInterval_Days" days
-    )
+    Min({
+      "Patient Birth Date" + Schedule."Dose2_LatestRecAge_Days",
+      date from ("Dose 1 Valid".occurrence as dateTime) + Schedule."Dose2_LatestRecInterval_Days"
+    })
   else null
 
 /*

@@ -1,0 +1,18 @@
+{
+  "resourceType": "Patient",
+  "id": "cdsi-2013-0524",
+  "text": {
+    "status": "generated",
+    "div": "<div xmlns=\"http://www.w3.org/1999/xhtml\">Test: Two-dose series complete - Dose 2 administered at 4 years.</div>"
+  },
+  "name": [
+    {
+      "given": [
+        "Preschooler"
+      ],
+      "family": "TestCase"
+    }
+  ],
+  "gender": "female",
+  "birthDate": "2021-11-30"
+}
