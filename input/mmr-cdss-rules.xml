@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImplementationGuide xmlns="http://hl7.org/fhir">
+    <id value="cdsi-mmr-poc"/>
+    <url value="http://example.org/fhir/ImplementationGuide/cdsi-mmr-poc"/>
+    <version value="1.0.0"/>
+    <name value="MMRCDSSRules"/>
+    <title value="MMR CDSS Rules"/>
+    <status value="draft"/>
+    <experimental value="true"/>
+    <date value="2025-11-18"/>
+    <publisher value="CDSS4PCP"/>
+    <contact>
+      <telecom>
+        <system value="url"/>
+        <value value="https://github.com/CDSS4PCP/CDSS_Rules_Repository"/>
+      </telecom>
+    </contact>
+    <description value="MMR Vaccination CDSS Rules from CDC-recommended immunization schedules"/>
+    <packageId value="cdsi-mmr-poc"/>
+    <license value="CC0-1.0"/>
+    <fhirVersion value="4.0.1"/>
+    <definition>
+        <parameter>
+          <code value="copyrightyear"/>
+          <value value="2025+"/>
+        </parameter>
+        <parameter>
+          <code value="releaselabel"/>
+          <value value="CI Build"/>
+        </parameter>
+        <parameter>
+          <code value="path-binary"/>
+          <value value="input/cql"/>
+        </parameter>
+        <parameter>
+          <code value="path-resource"/>
+          <value value="input/vocabulary/valueset"/>
+        </parameter>
+    </definition>
+</ImplementationGuide>

@@ -1,0 +1,65 @@
+# CDSI Test Case Conversion
+# Source: cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx
+cdsiSource:
+  testId: "2015-0024"
+  testName: "MMR: Patient is born before 01/01/1957"
+  fileName: "cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx"
+  version: "v4.45"
+  convertedDate: "2024-11-29"
+
+testCaseId: cdsi-2015-0024
+description: "Adult born before 1957 - considered immune without vaccination"
+
+# Clinical scenario from CDSI
+clinicalScenario:
+  scenario: "Adult patient born before January 1, 1957"
+  priorMMRDoses: 0
+  expectedOutcome: "Patient considered immune, no doses needed"
+
+# Expected results from CDSI test case
+expectedResults:
+  # Evaluation
+  dose1_evaluationStatus: null
+  dose2_evaluationStatus: null
+
+  # Series
+  seriesStatus: "Immune"
+
+  # Forecast
+  forecastStatus: "Not recommended: immune"
+  forecastDoseNumber: null
+  forecastVaccineType: null
+  forecastReason: "Born before 1957"
+
+# Patient demographics
+patient:
+  id: cdsi-2015-0024
+  name:
+    given: Elder
+    family: TestCase
+  gender: male
+  birthDate: "1955-06-20"
+    # Clinical intent: Absolute date before 1957-01-01
+    # Note: Using absolute date for birth year immunity rule
+
+# FHIR resources
+immunizations: []
+conditions: []
+observations: []
+
+# Test metadata
+metadata:
+  created: "2024-11-29"
+  purpose: "Test birth date immunity rule for adults born before 1957"
+  notes: |
+    CDSI Test 2015-0024: This test case describes when a patient was born
+    before January 1, 1957, that the patient is considered to be Immune.
+
+    New test case for version 2.0 which expanded scope into Adult recommendations.
+
+    Important: This immunity presumption applies UNLESS the patient is a
+    healthcare worker (see test cdsi-2015-0024-healthcare for that scenario).
+  cdcGuidance: |
+    Persons born before 1957 are generally considered immune to measles and
+    mumps. However, healthcare personnel born before 1957 without laboratory
+    evidence of immunity or disease should receive 2 doses of MMR vaccine.

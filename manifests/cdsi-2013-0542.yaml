@@ -1,0 +1,75 @@
+# CDSI Test Case Conversion
+# Source: cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx
+cdsiSource:
+  testId: "2013-0542"
+  testName: "MMR #1 at 12 months"
+  fileName: "cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx"
+  version: "v4.45"
+  convertedDate: "2024-11-29"
+
+testCaseId: cdsi-2013-0542
+description: "Dose 1 administered at exactly 12 months of age"
+
+# Clinical scenario from CDSI
+clinicalScenario:
+  scenario: "Child receives first MMR dose at minimum recommended age"
+  priorMMRDoses: 0
+  doseBeingEvaluated: 1
+  expectedOutcome: "Dose 1 valid, forecast Dose 2"
+
+# Expected results from CDSI test case
+expectedResults:
+  # Evaluation
+  dose1_evaluationStatus: "Valid"
+  dose1_vaccineCode: "03"
+  dose2_evaluationStatus: null
+
+  # Series
+  seriesStatus: "In-Process"
+
+  # Forecast
+  forecastStatus: "Recommended"
+  forecastDoseNumber: 2
+  forecastVaccineType: "MMR"
+  forecastEarliest: "4 weeks - 4 days after Dose 1"
+  forecastRecommended: "4 years"
+  forecastPastDue: "7 years + 4 weeks"
+
+# Patient demographics
+patient:
+  id: cdsi-2013-0542
+  name:
+    given: Toddler
+    family: TestCase
+  gender: male
+  birthDate:
+    relative: "12 months before reference"
+    # Clinical intent: Patient is exactly 12 months old at Dose 1
+
+# Immunization history
+immunizations:
+  - id: dose1-mmr
+    status: completed
+    primarySource: true
+    vaccineCode:
+      coding:
+        - system: http://hl7.org/fhir/sid/cvx
+          code: "03"
+          display: MMR
+      text: M-M-R II
+    occurrenceDateTime:
+      relative: "0 days before reference"
+      # Clinical intent: Dose given at assessment date (at age 12 months)
+
+conditions: []
+observations: []
+
+# Test metadata
+metadata:
+  created: "2024-11-29"
+  purpose: "Test minimum recommended age for Dose 1"
+  notes: |
+    CDSI Test 2013-0542: This test case describes when a child receives the
+    first dose of the MMR vaccine at 12 months of age, that the dose is
+    considered to be valid.
+  cdcGuidance: "Routine MMR dose 1 at 12-15 months, minimum age 12 months"

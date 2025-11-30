@@ -1,0 +1,84 @@
+# CDSI Test Case Conversion
+# Source: cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx
+cdsiSource:
+  testId: "2019-0018"
+  testName: "Adult with a dose of the MMR vaccine"
+  fileName: "cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx"
+  version: "v4.45"
+  convertedDate: "2024-11-29"
+
+testCaseId: cdsi-2019-0018
+description: "Adult (19+) with one valid dose - conditional skip of Dose 2"
+
+# Clinical scenario from CDSI
+clinicalScenario:
+  scenario: "Adult patient with one MMR dose in childhood"
+  priorMMRDoses: 1
+  patientAge: "19+ years"
+  expectedOutcome: "Series complete with only 1 dose (conditional skip)"
+
+# Expected results from CDSI test case
+expectedResults:
+  # Evaluation
+  dose1_evaluationStatus: "Valid"
+  dose1_vaccineCode: "03"
+  dose2_evaluationStatus: null
+  dose2_conditionalSkip: true
+  dose2_skipReason: "Age >= 19 years"
+
+  # Series
+  seriesStatus: "Complete"
+
+  # Forecast
+  forecastStatus: "Complete"
+  forecastDoseNumber: null
+  forecastVaccineType: null
+
+# Patient demographics
+patient:
+  id: cdsi-2019-0018
+  name:
+    given: Adult
+    family: TestCase
+  gender: female
+  birthDate:
+    relative: "24 years before reference"
+    # Clinical intent: Patient is 24 years old (well over 19)
+
+# Immunization history
+immunizations:
+  - id: dose1-mmr
+    status: completed
+    primarySource: true
+    vaccineCode:
+      coding:
+        - system: http://hl7.org/fhir/sid/cvx
+          code: "03"
+          display: MMR
+      text: M-M-R II
+    occurrenceDateTime:
+      relative: "23 years before reference"
+      # Clinical intent: Dose given at 12 months (24y - 23y = 1y)
+
+conditions: []
+observations: []
+
+# Test metadata
+metadata:
+  created: "2024-11-29"
+  purpose: "Test conditional skip rule for adults >= 19 years with one dose"
+  notes: |
+    CDSI Test 2019-0018: This test case describes when an adult patient
+    received a dose of the MMR vaccine, that no additional doses are needed.
+    Series is complete.
+
+    Per CDSI conditional skip logic: Dose 2 can be skipped for patients
+    >= 19 years of age who have received one valid dose.
+  cdcGuidance: |
+    Adults born in 1957 or later should receive at least 1 dose of MMR vaccine
+    unless they have evidence of immunity. Some adults may need 2 doses
+    (students in post-secondary educational institutions, healthcare personnel,
+    international travelers).
+
+    The conditional skip reflects that most adults without special risk factors
+    are considered adequately protected with 1 dose.

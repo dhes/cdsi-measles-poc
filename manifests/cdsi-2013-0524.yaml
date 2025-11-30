@@ -1,0 +1,89 @@
+# CDSI Test Case Conversion
+# Source: cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx
+cdsiSource:
+  testId: "2013-0524"
+  testName: "#2 at 4 years"
+  fileName: "cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx"
+  version: "v4.45"
+  convertedDate: "2024-11-29"
+
+testCaseId: cdsi-2013-0524
+description: "Two-dose series complete - Dose 2 administered at 4 years"
+
+# Clinical scenario from CDSI
+clinicalScenario:
+  scenario: "Child completes MMR series with Dose 2 at 4 years"
+  priorMMRDoses: 1
+  doseBeingEvaluated: 2
+  expectedOutcome: "Both doses valid, series complete"
+
+# Expected results from CDSI test case
+expectedResults:
+  # Evaluation
+  dose1_evaluationStatus: "Valid"
+  dose1_vaccineCode: "03"
+  dose2_evaluationStatus: "Valid"
+  dose2_vaccineCode: "03"
+
+  # Series
+  seriesStatus: "Complete"
+
+  # Forecast
+  forecastStatus: "Complete"
+  forecastDoseNumber: null
+  forecastVaccineType: null
+
+# Patient demographics
+patient:
+  id: cdsi-2013-0524
+  name:
+    given: Preschooler
+    family: TestCase
+  gender: female
+  birthDate:
+    relative: "4 years before reference"
+    # Clinical intent: Patient is 4 years old at Dose 2
+
+# Immunization history
+immunizations:
+  - id: dose1-mmr
+    status: completed
+    primarySource: true
+    vaccineCode:
+      coding:
+        - system: http://hl7.org/fhir/sid/cvx
+          code: "03"
+          display: MMR
+      text: M-M-R II
+    occurrenceDateTime:
+      relative: "3 years before reference"
+      # Clinical intent: Dose 1 given at 12 months (4y - 3y = 1y)
+
+  - id: dose2-mmr
+    status: completed
+    primarySource: true
+    vaccineCode:
+      coding:
+        - system: http://hl7.org/fhir/sid/cvx
+          code: "03"
+          display: MMR
+      text: Priorix
+    occurrenceDateTime:
+      relative: "0 days before reference"
+      # Clinical intent: Dose 2 given at assessment (at age 4 years)
+
+conditions: []
+observations: []
+
+# Test metadata
+metadata:
+  created: "2024-11-29"
+  purpose: "Test standard 2-dose series completion at recommended ages"
+  notes: |
+    CDSI Test 2013-0524: This test case describes when the second dose of the
+    MMR vaccine is administered at 4 years of age, that the dose is considered
+    valid. The series is complete.
+
+    Note: Original test uses Priorix (different manufacturer) for Dose 2 to
+    verify that different MMR products are interchangeable.
+  cdcGuidance: "Routine MMR dose 1 at 12-15 months, dose 2 at 4-6 years"

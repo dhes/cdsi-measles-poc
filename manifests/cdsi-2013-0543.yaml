@@ -1,0 +1,59 @@
+# CDSI Test Case Conversion
+# Source: cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx
+cdsiSource:
+  testId: "2013-0543"
+  testName: "Newborn assessment"
+  fileName: "cdsi-healthy-childhood-and-adult-test-cases-v4.45.xlsx"
+  version: "v4.45"
+  convertedDate: "2024-11-29"
+
+testCaseId: cdsi-2013-0543
+description: "Newborn with no immunization history - forecast first dose"
+
+# Clinical scenario from CDSI
+clinicalScenario:
+  scenario: "Newborn patient assessed for first MMR dose"
+  priorMMRDoses: 0
+  expectedOutcome: "Forecast Dose 1 at 12 months"
+
+# Expected results from CDSI test case
+expectedResults:
+  # Evaluation
+  dose1_evaluationStatus: null
+  dose2_evaluationStatus: null
+
+  # Series
+  seriesStatus: "Not Complete"
+
+  # Forecast
+  forecastStatus: "Recommended"
+  forecastDoseNumber: 1
+  forecastVaccineType: "MMR"
+  forecastEarliest: "12 months - 4 days"
+  forecastRecommended: "12 months"
+  forecastPastDue: "16 months + 4 weeks"
+
+# Patient demographics
+patient:
+  id: cdsi-2013-0543
+  name:
+    given: Baby
+    family: TestCase
+  gender: unknown
+  birthDate:
+    relative: "9 months before reference"
+    # Clinical intent: Patient is 9 months old at assessment (under minimum age)
+
+# FHIR resources
+immunizations: []
+conditions: []
+observations: []
+
+# Test metadata
+metadata:
+  created: "2024-11-29"
+  purpose: "Test forecasting for newborn with no immunization history"
+  notes: |
+    CDSI Test 2013-0543: This test case describes the forecasting of the
+    first dose of the MMR vaccine for a newborn.
+  cdcGuidance: "Routine MMR dose 1 at 12-15 months"
